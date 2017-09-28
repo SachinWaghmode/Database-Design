@@ -1,0 +1,11 @@
+1. Given the following requirements for pharmaceutical company, drug, pharmacy, patient, and doctor,
+• Each pharmaceutical company has a unique name and multiple phones, and may manufacture many drugs.
+• Each drug has a name, and is manufactured by exactly one pharmaceutical company. Drugs made by different
+pharmaceutical companies may have duplicated names. Drugs made by each pharmaceutical company has
+unique name. Each drug may be sold by multiple pharmacies.
+• Each pharmacy has a unique name, and a phone. It sells one or more drugs, each with a price. Each pharmacy
+may be shopped by multiple patients.
+• Each doctor has a unique NPI number and a name. Each doctor is the primary doctor of at least 3 up to 20
+patients. A doctor may be visited by many patients (primary or not).
+• Each patient has a name and a unique SSN, and has exactly one primary doctor. A patient may office visit many
+doctors (primary or not). Each office visit has a date. A patient may buy multiple drugs, each of which with quantity. Each patient may shop at multiple pharmacies.
