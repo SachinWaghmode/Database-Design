@@ -1,0 +1,22 @@
+1. a.Find the unique department name that has the highest average salary (for instructors). 
+      There could be more than one such departments (with the same average salary).
+
+  b. [Single SELECT with JOIN] Among courses in any semester in 2009 and course sections with at least two students, 
+    list the course_id, sec_id, semester, and the average total credits (tot_cred, in descending order) of all students enrolled
+    in the section.
+  c. [Single SELECT with JOIN] Find the total number of unique students who have taken course sections 
+    (i.e., per course, per section, per semester, per year) taught by the instructor with ID 10101.
+  d. [nested query with EXISTS] Find unique course ids taught in Fall 2009 but not in Spring 2010.
+  e. [nested query with IN] Find unique course ids taught in both Fall 2009 and in Spring 2010.
+  f. [Single SELECT without UNION] For each department in department table, 
+    find out the number of instructors who taught class(es) in 2010 (including department with 0 instructor who taught in 2010).
+  g. [nested query without GROUP BY] Find out course ids (in ascending order) which were offered more than once in year 2009. 
+    (NOTE: Two sections of course A is counted as 2.)
+  h. Among department whose name include the letter i, whose instructor average salary > 42000, 
+    and which has at least two instructors, list such department name in descending order.
+
+2. a. Formulate a SQL query: In the instructor table, remove instructors who did not advise any student. No
+   b. After the statement in 2a is executed, what will happen to rows in other tables (e.g., teaches) 
+      that has a foreign key to instructor.ID and depend on the rows that were removed in 2a? why (be very specific)?
+3.  Formulate a SQL query: For the student whose name is ‘Brown’ in the ‘CMPE’ department, 
+    switch his advisor to ‘Brandt’ in the ‘CMPE’ department. No screenshot is needed.
