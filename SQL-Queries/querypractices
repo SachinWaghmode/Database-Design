@@ -15,7 +15,7 @@
   h. Among department whose name include the letter i, whose instructor average salary > 42000, 
     and which has at least two instructors, list such department name in descending order.
 
-2. a. Formulate a SQL query: In the instructor table, remove instructors who did not advise any student. No
+2. a. In the instructor table, remove instructors who did not advise any student. 
    b. After the statement in 2a is executed, what will happen to rows in other tables (e.g., teaches) 
       that has a foreign key to instructor.ID and depend on the rows that were removed in 2a? why (be very specific)?
 3.  Formulate a SQL query: For the student whose name is ‘Brown’ in the ‘CMPE’ department, 
