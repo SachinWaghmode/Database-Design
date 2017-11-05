@@ -1,22 +1,109 @@
 1. a.Find the unique department name that has the highest average salary (for instructors). 
       There could be more than one such departments (with the same average salary).
-
+-------------------------------------------------------------------------------------------------------------------------------------------    
+    Select dept_name
+    from instructor
+    Group by dept_name
+    having avg(salary) IN (Select  max(avgsalary) 
+			   From (Select  dept_name,avg(salary) as avgsalary
+				  from instructor
+				 GROUP BY dept_name ) as A) ;
+-------------------------------------------------------------------------------------------------------------------------------
   b. [Single SELECT with JOIN] Among courses in any semester in 2009 and course sections with at least two students, 
     list the course_id, sec_id, semester, and the average total credits (tot_cred, in descending order) of all students enrolled
     in the section.
+-------------------------------------------------------------------------------------------------------------------------------
+    Select   s.course_id,  s.sec_id, s.semester, avg(st.tot_cred)
+    from  takes s, student  st
+    Where   st.ID = s.ID and s.year = 2009 
+    Group by s.sec_id, s.course_id, s.semester
+    having count(st.ID) >= 2
+    Order by avg(st.tot_cred) DESC;
+-------------------------------------------------------------------------------------------------------------------------------
   c. [Single SELECT with JOIN] Find the total number of unique students who have taken course sections 
     (i.e., per course, per section, per semester, per year) taught by the instructor with ID 10101.
+-------------------------------------------------------------------------------------------------------------------------------
+    Select s.course_id, s.sec_id, s.semester,  s.year, count(distinct st.ID)
+    from student st, takes s, advisor a
+    where st.ID = s.ID and  s.ID = a.s_id and a.i_id = 10101
+    Group by s.course_id, s.sec_id, s.semester,  s.year;
+-------------------------------------------------------------------------------------------------------------------------------
   d. [nested query with EXISTS] Find unique course ids taught in Fall 2009 but not in Spring 2010.
+-------------------------------------------------------------------------------------------------------------------------------
+   Select distinct course_id 
+   from course c
+   WHERE    EXISTS(
+                    Select course_id
+                    from teaches t
+                    where   semester = "Fall" and year = 2009 and c.course_id = t.course_id)  
+                    AND  NOT EXISTS (select course_id
+                                    from teaches  i
+                                     where   semester = "Spring" and year = 2010 and c.course_id = i.course_id);
+-------------------------------------------------------------------------------------------------------------------------------
   e. [nested query with IN] Find unique course ids taught in both Fall 2009 and in Spring 2010.
+-------------------------------------------------------------------------------------------------------------------------------
+   Select distinct course_id
+   from teaches t
+   where   semester = "Fall" and year = 2009 and t.course_id  IN
+                                                                  (select i.course_id
+                                                                   from teaches  i
+                                                                   where  i.semester = "Spring" and 
+                                                                          i.year = 2010 and t.course_id = i.course_id) ;
+-------------------------------------------------------------------------------------------------------------------------------
   f. [Single SELECT without UNION] For each department in department table, 
     find out the number of instructors who taught class(es) in 2010 (including department with 0 instructor who taught in 2010).
+-------------------------------------------------------------------------------------------------------------------------------
+ Select c.dept_name, count(t.ID) 
+ From course c left join teaches t on (t.year = 2010 and c.course_id = t.course_id)
+ group by c.dept_name;
+-------------------------------------------------------------------------------------------------------------------------------
   g. [nested query without GROUP BY] Find out course ids (in ascending order) which were offered more than once in year 2009. 
     (NOTE: Two sections of course A is counted as 2.)
+-------------------------------------------------------------------------------------------------------------------------------
+  Select distinct course_id
+  from section s
+  where course_id in (select course_id 
+			    from section i 
+                      where s.course_id = i.course_id and s.sec_id != i.sec_id and year = 2009)
+   order by course_id;
+-------------------------------------------------------------------------------------------------------------------------------
   h. Among department whose name include the letter i, whose instructor average salary > 42000, 
     and which has at least two instructors, list such department name in descending order.
+-------------------------------------------------------------------------------------------------------------------------------
+ select dept_name , AVGSALARY 
+ from (select dept_name , avg(salary) as AVGSALARY, count(ID)
+			from instructor
+			group by dept_name
+                  having count(ID)>=2) as A
+ where  dept_name like "%i%" and AVGSALARY>42000 
+ order by dept_name DESC ;
+-------------------------------------------------------------------------------------------------------------------------------
 
 2. a. In the instructor table, remove instructors who did not advise any student. 
+-------------------------------------------------------------------------------------------------------------------------------
+ Delete from instructor
+ Where ID IN (Select ID
+ From instructor i left join advisor a on ( i.ID = a.i_id)
+ where a.s_id IS NULL)
+-------------------------------------------------------------------------------------------------------------------------------
    b. After the statement in 2a is executed, what will happen to rows in other tables (e.g., teaches) 
       that has a foreign key to instructor.ID and depend on the rows that were removed in 2a? why (be very specific)?
+--------------------------------------------------------------------------------------------------------------------------------      
+      Instructor ID in teaches table is defined as On Delete Cascade 
+      When we delete instructor ID from instructor table all the rows for that instructor id referring in teaches table 
+      will be deleted.
+-------------------------------------------------------------------------------------------------------------------------------
+      
 3.  Formulate a SQL query: For the student whose name is ‘Brown’ in the ‘CMPE’ department, 
     switch his advisor to ‘Brandt’ in the ‘CMPE’ department. No screenshot is needed.
+-------------------------------------------------------------------------------------------------------------------------------
+      update advisor a
+      set a.i_id = (select i.ID
+				from instructor i 
+				where i.name= "Brandt" and i.dept_name="CMPE")
+				where a.s_id =(select s.ID 
+						   from student s 
+                                       where s.name="Brown" and s.dept_name="CMPE");
+-------------------------------------------------------------------------------------------------------------------------------
+
+
